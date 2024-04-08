@@ -1,10 +1,24 @@
-import { StatusBar } from "expo-status-bar";
-import { View, Text, StyleSheet} from "react-native";
+import { View, Text, StyleSheet, Button} from "react-native";
+import axios from 'axios';
+import { SERVERURL } from "../config";
+
+const testConnection = () => {
+  axios.get(`${SERVERURL}/test`)
+    .then(response => {
+      console.log(response.data);
+    })
+    .catch(error => {
+      console.error('Error:', error);
+    });
+}
+
+
 
 const PinScreen = () => {
     return (
       <View style={styles.container}>
-        <Text>Pins Screen</Text>
+        <Text>Pin Screen</Text>
+        <Button title="test connection" onPress={testConnection}></Button>
       </View>
     );
   };
