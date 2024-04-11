@@ -3,7 +3,7 @@ import axios from 'axios';
 import { SERVERURL } from "../config";
 
 const testConnection = () => {
-  axios.get(`${SERVERURL}/test`)
+  axios.get(`${SERVERURL}/`)
     .then(response => {
       console.log(response.data);
     })
