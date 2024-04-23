@@ -1,10 +1,13 @@
-import { View, Text, StyleSheet, Image, Button } from "react-native";
+import { View, Text, StyleSheet, Image } from "react-native";
 import MapView, {Marker} from "react-native-maps";
 import axios from 'axios';
 import { SERVERURL } from "../config";
 import React, { useState, useEffect, useRef } from 'react';
 import MapViewStyle from "./../utils/MapViewStyle.json";
 import Header from "../views/header";
+import { useNavigation } from '@react-navigation/native';
+import { useCoordinates } from "../CoordinateContext";
+
 
 export default function HomeScreen() {
   const [isMarkerClicked, setIsMarkerCLicked] = useState(false);
@@ -12,10 +15,19 @@ export default function HomeScreen() {
   const [pins, setPins] = useState([]);
   const [centerCoordinates, setCenterCoordinates] = useState(null);
   const mapViewRef = useRef(null); // Create a ref for the MapView
+  const [isMapMoving, setIsMapMoving] = useState(false); // Add this state variable
+  const navigation = useNavigation(); // Use useNavigation hook
+  const { setCoords } = useCoordinates();
+  const { coordinates } = useCoordinates();
+
 
   const onMarkerClick = (pin) => {
     console.log("Clicked Pin Info:", pin);
-    setSelectedPinId(pin.pin_id); // Set selected pin_id to the clicked pin's pin_id
+    setSelectedPinId(pin.pin_id);
+    // console.log(setCoords)
+    console.log("these are the coordinates I got from the context:", coordinates.latitude);
+    console.log("almost forgot the longitude!:", coordinates.longitude);
+    
   };
 
   const logCenterCoordinates = () => {
@@ -24,8 +36,10 @@ export default function HomeScreen() {
         const { center } = camera;
 
         if (center) {
-          // console.log('Center Coordinates:', center);
           setCenterCoordinates(center); // Update the state with center coordinates
+          // console.log(center);
+          setCoords(center) // the way to pass the coordinates across screens?
+          // console.log(coordinates);
         }
       }).catch(error => {
         console.error('Error getting camera position:', error);
@@ -53,7 +67,8 @@ export default function HomeScreen() {
       <MapView 
         ref={mapViewRef} // Assign the ref to the MapView
         style={styles.map} 
-        onRegionChangeComplete={logCenterCoordinates} // Update this line
+        onRegionChangeComplete={logCenterCoordinates} // is this line neccessary cause we do on touch move???
+        onTouchMove={logCenterCoordinates}
         provider={"google"}
         region={{
           latitude: 43.781340440132006,
@@ -87,12 +102,18 @@ export default function HomeScreen() {
         </View>
       )}
       {/* Center indicator */}
-      <View style={styles.centerIndicator}>
-        <Image 
-          source={require("../assets/settingsExample.png")}
-          style={{width: 40, height: 40}}
-        />
-      </View>
+      
+        <View style={styles.centerIndicator}>
+          <Image 
+            source={require("../assets/settingsExample.png")}
+            style={{width: 40, height: 40}}
+          />
+        </View>
+      {/* Vertical line (Down the middle) */}
+      <View style={styles.crosshairVertical}></View>
+
+      {/* Horizontal line (Across the middle) */}
+      <View style={styles.crosshairHorizontal}></View>
     </View>
   );
 }
@@ -128,5 +149,26 @@ const styles = StyleSheet.create({
     left: '50%',
     zIndex: 999,
     transform: [{ translateX: -20 }, { translateY: -20 }], // Center the image
+  },
+  crosshairVertical: {
+    position: 'absolute',
+    top: 0,
+    left: '50%',
+    width: 2,
+    height: '100%',
+    backgroundColor: 'gray', // Line color
+    zIndex: 1000,
+    opacity: '0.5'
+  },
+
+  crosshairHorizontal: {
+    position: 'absolute',
+    top: '50%',
+    left: 0,
+    width: '100%',
+    height: 2,
+    backgroundColor: 'gray', // Line color
+    zIndex: 1000,
+    opacity: '0.5'
   },
 });

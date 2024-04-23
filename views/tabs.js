@@ -123,6 +123,7 @@ const Tabs = () => {
         <Tab.Screen
         name="Add"
         component={AddScreen}
+        initialParams={{ openModal: true }}
         options={{
             tabBarIcon: ({ focused }) => (
                 <Image
@@ -131,7 +132,6 @@ const Tabs = () => {
                     style={{
                     width: 30,
                     height: 30,
-                    // tintColor: focused ? "#"
                     }}
                 />
                 ),
@@ -140,7 +140,6 @@ const Tabs = () => {
                 <CustomTabBarButton {...props} />
             ),
         }}
-        
         />
       <Tab.Screen name = "Partner" component={PartnerScreen}
       options={{
