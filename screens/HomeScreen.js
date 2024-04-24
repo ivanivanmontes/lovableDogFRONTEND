@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, Image } from "react-native";
-import MapView, {Marker} from "react-native-maps";
+import MapView, {Marker, Callout} from "react-native-maps";
 import axios from 'axios';
 import { SERVERURL } from "../config";
 import React, { useState, useEffect, useRef } from 'react';
@@ -91,6 +91,12 @@ export default function HomeScreen() {
               source={require("../assets/pinMarker.png")}
               style={{width: 60, height: 60, tintColor: selectedPinId === pin.pin_id ? "#C0C1EE" : "gray"}}
             />
+            <Callout style={styles.calloutStyle}>
+            <View>
+              <Text>{pin.title}</Text>
+              <Text>{pin.description}</Text>
+            </View>
+          </Callout>
           </Marker>
         ))}
       </MapView>
@@ -171,4 +177,19 @@ const styles = StyleSheet.create({
     zIndex: 1000,
     opacity: '0.5'
   },
+  calloutStyle: {
+    width: 160, // Set the width of the callout
+    padding: 10,
+    backgroundColor: 'white',
+    borderRadius: 10,
+    borderColor: 'grey',
+    borderWidth: 0.5,
+  },
+  title: {
+    fontWeight: 'bold',
+    fontSize: 16
+  },
+  description: {
+    fontSize: 14
+  }
 });
