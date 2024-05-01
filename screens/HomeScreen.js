@@ -5,18 +5,14 @@ import { SERVERURL } from "../config";
 import React, { useState, useEffect, useRef } from 'react';
 import MapViewStyle from "./../utils/MapViewStyle.json";
 import Header from "../views/header";
-import { useNavigation } from '@react-navigation/native';
 import { useCoordinates } from "../CoordinateContext";
 
 
 export default function HomeScreen() {
-  const [isMarkerClicked, setIsMarkerCLicked] = useState(false);
   const [selectedPinId, setSelectedPinId] = useState(null);
   const [pins, setPins] = useState([]);
   const [centerCoordinates, setCenterCoordinates] = useState(null);
-  const mapViewRef = useRef(null); // Create a ref for the MapView
-  const [isMapMoving, setIsMapMoving] = useState(false); // Add this state variable
-  const navigation = useNavigation(); // Use useNavigation hook
+  const mapViewRef = useRef(null);
   const { setCoords } = useCoordinates();
   const { coordinates } = useCoordinates();
 
@@ -24,7 +20,6 @@ export default function HomeScreen() {
   const onMarkerClick = (pin) => {
     console.log("Clicked Pin Info:", pin);
     setSelectedPinId(pin.pin_id);
-    // console.log(setCoords)
     console.log("these are the coordinates I got from the context:", coordinates.latitude);
     console.log("almost forgot the longitude!:", coordinates.longitude);
     
@@ -37,9 +32,7 @@ export default function HomeScreen() {
 
         if (center) {
           setCenterCoordinates(center); // Update the state with center coordinates
-          // console.log(center);
           setCoords(center) // the way to pass the coordinates across screens?
-          // console.log(coordinates);
         }
       }).catch(error => {
         console.error('Error getting camera position:', error);
@@ -109,17 +102,17 @@ export default function HomeScreen() {
       )}
       {/* Center indicator */}
       
-        <View style={styles.centerIndicator}>
+        {/* <View style={styles.centerIndicator}>
           <Image 
             source={require("../assets/settingsExample.png")}
             style={{width: 40, height: 40}}
           />
-        </View>
+        </View> */}
       {/* Vertical line (Down the middle) */}
-      <View style={styles.crosshairVertical}></View>
+      {/* <View style={styles.crosshairVertical}></View> */}
 
       {/* Horizontal line (Across the middle) */}
-      <View style={styles.crosshairHorizontal}></View>
+      {/* <View style={styles.crosshairHorizontal}></View> */}
     </View>
   );
 }

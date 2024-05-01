@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Button, Image  } from 'react-native';
-import { launchImageLibrary } from 'react-native-image-picker';
 import axios from 'axios';
 import * as ImagePicker from 'expo-image-picker';
 
